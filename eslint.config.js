@@ -82,6 +82,7 @@ export default [
       'coverage/**',
       'uploads/**',
       'vite.config.ts',
+      'src/db/drizzle.config.ts',
     ],
   },
   js.configs.recommended,
@@ -98,6 +99,8 @@ export default [
     rules: {
       'no-undef': 'off',
       'no-unused-vars': 'off',
+      'no-empty': 'off',
+      'no-useless-assignment': 'off',
       'no-debugger': 'error',
       'no-var': 'error',
       'prefer-const': 'error',

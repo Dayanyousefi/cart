@@ -16,7 +16,8 @@ export interface AppEnvConfig {
   defaultTimezone: string;
   defaultLocale: string;
   baseInvitationPriceToman: number;
-  databaseUrl: string;
+  sqlHost: string;
+  sqlDbName: string;
   redisEnabled: boolean;
   redisUrl: string;
   queueDriver: QueueDriver;
@@ -70,16 +71,14 @@ export function loadEnvConfig(
   return {
     nodeEnv,
     port: parsePositiveInt(rawEnv.PORT, 3000),
-    appName: (rawEnv.APP_NAME || 'Eyvan Digital Invitation Platform').trim(),
+    appName: (rawEnv.APP_NAME || 'INVITÉ | Eyvan Luxury Invitation Platform').trim(),
     appUrl: (rawEnv.APP_URL || 'http://localhost:3000').trim(),
     publicInvitationBasePath: (rawEnv.PUBLIC_INVITATION_BASE_PATH || '/i').trim(),
     defaultTimezone: (rawEnv.DEFAULT_TIMEZONE || 'Asia/Tehran').trim(),
     defaultLocale: (rawEnv.DEFAULT_LOCALE || 'fa-IR').trim(),
     baseInvitationPriceToman: parsePositiveInt(rawEnv.BASE_INVITATION_PRICE_TOMAN, 50000),
-    databaseUrl: (
-      rawEnv.DATABASE_URL ||
-      'postgresql://postgres:postgres@localhost:5432/invitation_saas?schema=public'
-    ).trim(),
+    sqlHost: (rawEnv.SQL_HOST || '').trim(),
+    sqlDbName: (rawEnv.SQL_DB_NAME || 'invite_db').trim(),
     redisEnabled: parseBoolean(rawEnv.REDIS_ENABLED, false),
     redisUrl: (rawEnv.REDIS_URL || 'redis://localhost:6379/0').trim(),
     queueDriver,

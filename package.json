@@ -13,19 +13,31 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" server.ts",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\" server.ts",
-    "test": "tsx --test src/architecture/specs.test.ts src/server/foundation.test.ts src/server/db/auth-db.test.ts src/layouts/layouts.test.ts"
+    "test": "tsx --test src/architecture/specs.test.ts src/server/foundation.test.ts src/server/db/auth-db.test.ts src/layouts/layouts.test.ts src/modules/template-engine/invite.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
     "@tailwindcss/vite": "^4.3.3",
+    "@types/pg": "^8.23.1",
+    "@types/three": "^0.187.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "dotenv": "^17.2.3",
+    "drizzle-kit": "^0.31.11",
+    "drizzle-orm": "^0.45.4",
+    "express": "^4.21.2",
+    "firebase": "^13.2.0",
+    "firebase-admin": "^14.5.0",
+    "gsap": "^3.15.1",
+    "konva": "^10.9.1",
     "lucide-react": "^0.546.0",
+    "motion": "^12.23.24",
+    "pg": "^8.23.1",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "react-konva": "^19.3.2",
+    "three": "^0.187.0",
     "vite": "^8.3.0",
-    "express": "^4.21.2",
-    "dotenv": "^17.2.3",
-    "motion": "^12.23.24"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

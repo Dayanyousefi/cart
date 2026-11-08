@@ -7,14 +7,15 @@ import { logger } from './src/server/common/logger';
 import { requestContextMiddleware } from './src/server/middleware/request-context';
 import { healthRouter } from './src/server/modules/health/health.routes';
 import { databaseRouter } from './src/server/modules/database/database.routes';
+import { inviteRouter } from './src/server/modules/invite/invite.routes.ts';
 import { apiNotFoundHandler, centralizedErrorHandler } from './src/server/middleware/error-handler';
 
 async function startServer(): Promise<void> {
   const app = express();
 
   app.disable('x-powered-by');
-  app.use(express.json({ limit: '1mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+  app.use(express.json({ limit: '5mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
   // Request context, security headers & structured access logs
   app.use(requestContextMiddleware);
@@ -22,11 +23,16 @@ async function startServer(): Promise<void> {
   // Mount API v1 routes
   app.use('/api/v1', healthRouter);
   app.use('/api/v1', databaseRouter);
+  app.use('/api/v1', inviteRouter);
   app.use('/api', apiNotFoundHandler);
 
   if (envConfig.nodeEnv !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: false,
+        watch: null,
+      },
       appType: 'spa',
     });
     app.use(vite.middlewares);
