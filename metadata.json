@@ -1,0 +1,6 @@
+{
+  "name": "پلتفرم دعوتنامه دیجیتال ایوان | معماری و مستندات فاز ۰",
+  "description": "پلتفرم SaaS ساخت و فروش دعوتنامه دیجیتال فارسی (عروسی، تولد، نامزدی و مراسم) با معماری Modular Monolith",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

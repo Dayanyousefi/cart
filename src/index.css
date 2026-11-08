@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'Vazirmatn', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    direction: rtl;
+    text-align: right;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    direction: rtl;
+  }
+
+  code,
+  pre,
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+}
+
+.font-vazirmatn {
+  font-family: var(--font-sans);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ceremonial ornamental border helper for PublicInvitationLayout */
+.ceremonial-double-border {
+  box-shadow:
+    inset 0 0 0 1px rgba(180, 83, 9, 0.22),
+    inset 0 0 0 6px rgba(255, 251, 235, 0.85),
+    inset 0 0 0 7px rgba(180, 83, 9, 0.14);
+}

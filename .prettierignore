@@ -1,0 +1,7 @@
+dist
+node_modules
+.playwright-cli
+uploads
+coverage
+*.min.js
+package-lock.json

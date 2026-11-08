@@ -1,0 +1,101 @@
+# =============================================================================
+# Docker Compose — محیط توسعه و استقرار محلی پلتفرم دعوتنامه دیجیتال «ایوان»
+# شامل: App (Modular Monolith) + PostgreSQL 16 + Redis 7 + Nginx Reverse Proxy
+# =============================================================================
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: eyvan_app_dev
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3000
+      APP_NAME: ${APP_NAME:-Eyvan Digital Invitation Platform}
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      DEFAULT_TIMEZONE: Asia/Tehran
+      DEFAULT_LOCALE: fa-IR
+      BASE_INVITATION_PRICE_TOMAN: ${BASE_INVITATION_PRICE_TOMAN:-50000}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-invitation_saas}?schema=public
+      REDIS_ENABLED: "true"
+      REDIS_URL: redis://redis:6379/0
+      QUEUE_DRIVER: bullmq
+      PAYMENT_GATEWAY_PROVIDER: ${PAYMENT_GATEWAY_PROVIDER:-mock}
+      PAYMENT_SANDBOX_MODE: "true"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - eyvan_uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eyvan_network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: eyvan_postgres_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-invitation_saas}
+      TZ: Asia/Tehran
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - eyvan_pgdata:/var/lib/postgresql/data
+      - ./infrastructure/docker/init-db.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-invitation_saas}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - eyvan_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: eyvan_redis_dev
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - eyvan_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - eyvan_network
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: eyvan_nginx_dev
+    restart: unless-stopped
+    ports:
+      - "${NGINX_HTTP_PORT:-8080}:80"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - eyvan_network
+
+volumes:
+  eyvan_pgdata:
+  eyvan_redisdata:
+  eyvan_uploads:
+
+networks:
+  eyvan_network:
+    driver: bridge
